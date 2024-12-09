@@ -52,6 +52,25 @@ class CourseService
     end
   end
 
+  def self.format_courses(courses)
+    courses.map do |course|
+      course.as_json.merge(
+        category: course.category,
+        teacher: course.teacher,
+        assignments_count: assignments_count(course)
+      )
+    end
+  end
+
+  def self.delete_course(course)
+    if course.destroy
+      { success: true, message: "Course deleted successfully" }
+    else
+      { success: false, message: "Failed to delete course" }
+    end
+  end
+
+
   private
 
   def course_with_lessons
@@ -91,5 +110,13 @@ class CourseService
 
   def already_assigned
     { error: "Course already assigned or pending", course_id: @course.id, status: :pending }
+  end
+
+  def self.assignments_count(course)
+    {
+      pending: course.pending_count,
+      accepted: course.accepted_count,
+      rejected: course.rejected_count
+    }
   end
 end

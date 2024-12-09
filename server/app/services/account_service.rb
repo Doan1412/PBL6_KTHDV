@@ -47,5 +47,12 @@ class AccountService
         { success: false, message: "Token đặt lại mật khẩu không hợp lệ hoặc đã hết hạn." }
       end
     end
+    def update_status(account:)
+      if account.toggle_status
+        { success: true, message: "Cập nhật trạng thái thành công" }
+      else
+        { success: false, message: "Cập nhật trạng thái thất bại" }
+      end
+    end
   end
 end

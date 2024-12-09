@@ -8,7 +8,7 @@ class Api::Admin::CoursesController < Api::Admin::ApplicationController
 
     json_response(
       message: {
-        courses: formatted_courses,
+        courses: CourseService.format_courses(@courses),
         pagy: pagy_res(@pagy)
       },
       status: :ok
@@ -16,46 +16,24 @@ class Api::Admin::CoursesController < Api::Admin::ApplicationController
   end
 
   def destroy
-    unless @course.destroy
-      return error_response(
-        message: "Failed to delete course",
-        status: :unprocessable_entity
-      )
-    end
+    result = CourseService.delete_course(@course)
 
-    json_response(
-      message: "Course deleted successfully",
-      status: :ok
-    )
+    if result[:success]
+      json_response(message: result[:message], status: :ok)
+    else
+      error_response(message: result[:message], status: :unprocessable_entity)
+    end
   end
 
   private
 
   def set_course
-    @course = Course.find_by id: params[:id]
+    @course = Course.find_by(id: params[:id])
     return if @course
 
     error_response(
       message: "Course not found",
       status: :not_found
     )
-  end
-
-  def formatted_courses
-    @courses.map do |course|
-      course.as_json.merge(
-        category: course.category,
-        teacher: course.teacher,
-        assignments_count: assignments_count(course)
-      )
-    end
-  end
-
-  def assignments_count course
-    {
-      pending: course.pending_count,
-      accepted: course.accepted_count,
-      rejected: course.rejected_count
-    }
   end
 end
