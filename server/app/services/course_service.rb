@@ -1,75 +1,77 @@
 class CourseService
-  def self.fetch_courses_by_category(user, params)
-    courses_query = Course.by_category(params[:category_id])
-                          .sorted_by(params[:sort])
-                          .includes(:lessons, :teacher, :category)
-    pagy, courses = pagy(courses_query)
-    { pagy: pagy, courses: courses.as_json(include: %i(lessons teacher category)) }
+  def initialize(course, user = nil)
+    @course = course
+    @user = user
   end
 
-  def self.fetch_course_details(user, course)
+  def fetch_courses_by_category(category_id, sort_param)
+    Course.by_category(category_id)
+          .sorted_by(sort_param)
+          .includes(:lessons, :teacher, :category)
+  end
+
+  def fetch_course_details
     {
-      course: course_with_lessons(course),
-      is_assigned: user ? assigned?(course, user) : false,
-      status: user ? assignment_status(course, user) : nil
+      course: course_with_lessons,
+      is_assigned: @user.present? ? assigned? : false,
+      status: @user.present? ? assignment_status : nil
     }
   end
 
-  def self.assign_course(user, course)
-    course_assignment = course.assignment_for_user(user)
+  def assign_course
+    course_assignment = @course.assignment_for_user(@user)
 
     if course_assignment.present?
       handle_existing_assignment(course_assignment)
     else
-      create_and_assign_new_course(user, course)
+      create_and_assign_new_course
     end
   end
 
-  def self.search_courses(params)
-    query = Course.ransack(
-      title_or_description_cont: params[:q],
-      level_eq: params[:level],
-      category_id_eq: params[:category],
-      teacher_id_eq: params[:teacher]
-    )
-    pagy, courses = pagy(query.result
-                            .sorted_by(params[:sort])
-                            .includes(:lessons, :teacher, :category))
-    { pagy: pagy, courses: courses.as_json(include: %i(lessons teacher category)) }
+  def search_courses(query_params, sort_param)
+    Course.ransack(query_params).result
+          .sorted_by(sort_param)
+          .includes(:lessons, :teacher, :category)
   end
 
   private
 
-  def self.course_with_lessons(course)
-    course.as_json(include: %i(lessons teacher category))
+  def course_with_lessons
+    @course.as_json(include: %i(lessons teacher category))
   end
 
-  def self.assigned?(course, user)
-    course_assignment(course, user).present?
+  def assigned?
+    course_assignment.present?
   end
 
-  def self.assignment_status(course, user)
-    course_assignment(course, user)&.status
+  def assignment_status
+    course_assignment&.status
   end
 
-  def self.course_assignment(course, user)
-    @course_assignment ||= CourseAssignment.find_by(user_id: user.id, course_id: course.id)
+  def course_assignment
+    @course_assignment ||= CourseAssignment.find_by(user_id: @user.id, course_id: @course.id)
   end
 
-  def self.handle_existing_assignment(course_assignment)
-    return { status: :already_assigned } if course_assignment.status != "rejected"
+  def handle_existing_assignment(course_assignment)
+    return already_assigned unless course_assignment.status != "rejected"
 
     course_assignment.update(status: :pending, assigned_at: Time.zone.now)
-    { course_id: course_assignment.course.id, status: course_assignment.status }
+    { course_id: @course.id, status: course_assignment.status }
   end
 
-  def self.create_and_assign_new_course(user, course)
-    course_assignment = user.course_assignments.create(course: course, status: :pending)
+  def create_and_assign_new_course
+    course_assignment = create_course_assignment
     course_assignment.assigned_at = Time.zone.now
-    if course_assignment.save
-      { course_id: course.id, status: course_assignment.status }
-    else
-      { error: "Failed to assign course" }
-    end
+    return { error: "Failed to assign course" } unless course_assignment.save
+
+    { course_id: @course.id, status: course_assignment.status }
+  end
+
+  def create_course_assignment
+    @user.course_assignments.create(course: @course, status: :pending)
+  end
+
+  def already_assigned
+    { error: "Course already assigned or pending", course_id: @course.id, status: :pending }
   end
 end
