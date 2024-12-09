@@ -34,4 +34,13 @@ class TeacherService
   def update_teacher_profile(params)
     @teacher.update(params)
   end
+
+  # Lấy danh sách giáo viên với phân trang, tìm kiếm và tính toán các số liệu liên quan
+  def self.fetch_teachers(query_params)
+    query = Teacher.includes(:courses, :account).ransack(query_params[:q])
+    teachers = query.result
+                    .with_courses_count
+                    .with_student_count
+    teachers
+  end
 end

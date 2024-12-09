@@ -11,9 +11,27 @@ class RequestCourseService
     request_course.status = :pending
 
     if request_course.save
-      return { success: true, request_course: request_course }
+      { success: true, request_course: request_course }
     else
-      return { success: false, errors: request_course.errors.full_messages }
+      { success: false, errors: request_course.errors.full_messages }
     end
+  end
+
+  # Xử lý thay đổi trạng thái yêu cầu
+  def update_request_status(request_course, status)
+    request_course.update(status: status)
+  end
+
+  # Xử lý khi yêu cầu được chấp nhận
+  def handle_approved_status(request_course)
+    request_course.approve_request
+    request_course.teacher.notify_followers_of_new_course(request_course)
+    { message: "Request approved successfully" }
+  end
+
+  # Xử lý khi yêu cầu bị từ chối
+  def handle_rejected_status(request_course)
+    request_course.reject_request
+    { message: "Request rejected successfully", status: :ok }
   end
 end

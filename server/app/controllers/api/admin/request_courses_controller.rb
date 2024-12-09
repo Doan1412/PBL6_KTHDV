@@ -21,14 +21,18 @@ module Api::Admin
       status = params[:status]
 
       ActiveRecord::Base.transaction do
-        unless update_request_status(status)
+        # Gọi service để cập nhật trạng thái yêu cầu
+        unless RequestCourseService.new(@request_course.teacher, nil).update_request_status(@request_course, status)
           raise ActiveRecord::Rollback, "Failed to update the request"
         end
 
+        # Xử lý các trạng thái được phê duyệt hoặc bị từ chối
         if status == "approved"
-          handle_approved_status
+          result = RequestCourseService.new(@request_course.teacher, nil).handle_approved_status(@request_course)
+          json_response(message: result[:message])
         else
-          handle_rejected_status
+          result = RequestCourseService.new(@request_course.teacher, nil).handle_rejected_status(@request_course)
+          json_response(message: result[:message], status: result[:status])
         end
       end
     rescue ActiveRecord::Rollback => e
@@ -43,21 +47,6 @@ module Api::Admin
       @request_course = RequestCourse.find params[:id]
     rescue ActiveRecord::RecordNotFound
       error_response(message: "Request not found", status: :not_found)
-    end
-
-    def update_request_status status
-      @request_course.update(status:)
-    end
-
-    def handle_approved_status
-      @request_course.approve_request
-      @request_course.teacher.notify_followers_of_new_course(@request_course)
-      json_response(message: "Request approved successfully")
-    end
-
-    def handle_rejected_status
-      @request_course.reject_request
-      json_response(message: "Request rejected successfully", status: :ok)
     end
   end
 end

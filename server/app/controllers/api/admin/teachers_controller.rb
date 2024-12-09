@@ -1,11 +1,15 @@
 class Api::Admin::TeachersController < Api::Admin::ApplicationController
   before_action :set_teacher, only: %i(destroy)
-  def index
-    @q = Teacher.includes(:courses, :account).ransack(params[:q])
-    @pagy, @teachers = pagy @q.result
-                              .with_courses_count
-                              .with_student_count
 
+  # Lấy danh sách giáo viên
+  def index
+    # Gọi service để lấy danh sách giáo viên
+    teachers = TeacherService.fetch_teachers(params)
+
+    # Phân trang kết quả
+    @pagy, @teachers = pagy(teachers)
+
+    # Trả về dữ liệu đã được format
     json_response(
       message: {
         teachers: formatted_teachers,
@@ -15,6 +19,7 @@ class Api::Admin::TeachersController < Api::Admin::ApplicationController
     )
   end
 
+  # Xóa giáo viên
   def destroy
     unless @teacher.destroy
       return error_response(
@@ -24,15 +29,16 @@ class Api::Admin::TeachersController < Api::Admin::ApplicationController
     end
 
     json_response(
-      message: "Course deleted successfully",
+      message: "Teacher deleted successfully",
       status: :ok
     )
   end
 
   private
 
+  # Tìm giáo viên theo ID
   def set_teacher
-    @teacher = Teacher.find_by id: params[:id]
+    @teacher = Teacher.find_by(id: params[:id])
     return if @teacher
 
     error_response(
@@ -41,6 +47,7 @@ class Api::Admin::TeachersController < Api::Admin::ApplicationController
     )
   end
 
+  # Format danh sách giáo viên để trả về
   def formatted_teachers
     @teachers.map do |teacher|
       {
