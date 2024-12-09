@@ -6,10 +6,9 @@ class Api::FlashcardsController < Api::ApplicationController
       return error_response(message: "Lesson not found", status: :not_found)
     end
 
-    @flashcard = Flashcard.new flashcard_params
-    @flashcard.lesson = @lesson
+    @flashcard = FlashcardService.create_flashcard(@lesson, flashcard_params)
 
-    if @flashcard.save
+    if @flashcard
       json_response(message: @flashcard, status: :created)
     else
       error_response(message: @flashcard.errors.full_messages,

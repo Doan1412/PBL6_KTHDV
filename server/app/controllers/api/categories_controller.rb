@@ -3,16 +3,10 @@ class Api::CategoriesController < Api::ApplicationController
   include Response
 
   def index
-    categories = Category.includes(courses: :teacher).all
+    categories = CategoryService.fetch_categories_with_courses
 
     json_response(
-      message: categories.as_json(
-        include: {
-          courses: {
-            include: :teacher
-          }
-        }
-      ),
+      message: categories,
       status: :ok
     )
   end
