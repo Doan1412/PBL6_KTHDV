@@ -1,47 +1,45 @@
 class Api::ProgressController < Api::ApplicationController
   before_action :authenticate
-  before_action :set_progress, only: %i(update)
+  before_action :set_progress, only: %i[update]
 
   def create
-    if current_user.progresses.exists?(lesson_id: progress_params[:lesson_id])
-      return error_response(message: "Your progress has been recorded",
-                            status: :forbidden)
+    service = ProgressService.new(current_user)
+    result = service.create_progress(progress_params)
+
+    case result
+    when :exists
+      error_response(message: "Your progress has been recorded", status: :forbidden)
+    when :success
+      json_response(message: "Progress saved successfully", status: :ok)
+    else
+      error_response(message: result, status: :forbidden)
     end
-
-    progress = current_user.progresses.new(progress_params)
-
-    unless progress.save
-      return error_response(message: progress.errors.full_messages,
-                            status: :forbidden)
-    end
-
-    json_response(message: "Progress saved successfully", status: :ok)
   end
 
   def update
-    if @progress.nil?
-      return error_response(message: "Progress not found", status: :not_found)
-    end
+    service = ProgressService.new(current_user)
+    result = service.update_progress(@progress, progress_params)
 
-    unless @progress.update(progress_params)
-      return error_response(errors: @progress.errors.full_messages,
-                            status: :forbidden)
+    case result
+    when :not_found
+      error_response(message: "Progress not found", status: :not_found)
+    when Progress
+      json_response(message: { success: "Progress updated successfully", progress: result }, status: :ok)
+    else
+      error_response(errors: result, status: :forbidden)
     end
-
-    json_response(message: {
-                    success: "Progress updated successfully",
-                    progress: @progress
-                  }, status: :ok)
   end
 
   def user_progress
     assignments = current_user.course_assignments.includes(:course)
-    progress_data = calculate_progress assignments
+    service = ProgressService.new(current_user)
+    progress_data = service.calculate_progress(assignments)
+    assignment_data = AssignmentService.as_json_with_course(assignments)
 
     json_response(
       message: {
         progress: progress_data,
-        assignment: assignments_as_json(assignments)
+        assignment: assignment_data
       },
       status: :ok
     )
@@ -50,37 +48,10 @@ class Api::ProgressController < Api::ApplicationController
   private
 
   def set_progress
-    @progress = current_user.progresses.find_by lesson_id: params[:id]
+    @progress = current_user.progresses.find_by(lesson_id: params[:id])
   end
 
   def progress_params
     params.require(:progress).permit(Progress::VALID_ATTRIBUTES_PROGRESS)
-  end
-
-  def calculate_progress assignments
-    accepted_courses = filter_accepted_courses assignments
-    accepted_courses.map{|assignment| progress_for_assignment(assignment)}
-  end
-
-  def filter_accepted_courses assignments
-    assignments.accepted
-  end
-
-  def progress_for_assignment assignment
-    course = assignment.course
-    {
-      course_title: course.title,
-      total_lessons: total_lessons(course),
-      in_progress: course.progresses.with_status(Settings.in_progress).count,
-      completed: course.progresses.with_status(Settings.completed).count
-    }
-  end
-
-  def total_lessons course
-    course.lessons.count
-  end
-
-  def assignments_as_json assignments
-    assignments.as_json(include: :course)
   end
 end
