@@ -34,6 +34,24 @@ class CourseService
           .includes(:lessons, :teacher, :category)
   end
 
+  def self.update_status(teacher:, course_id:, course_assignment:, status:)
+    course = Course.find_by(id: course_id)
+
+    unless course
+      return { success: false, message: "Course not found", errors: { course_id: "Invalid course ID" } }
+    end
+
+    unless course.teacher_id == teacher.id
+      return { success: false, message: "Permission denied", errors: { teacher: "Not authorized" } }
+    end
+
+    if course_assignment.update(status: status)
+      { success: true, message: "Status updated successfully" }
+    else
+      { success: false, message: "Failed to update status", errors: course_assignment.errors.full_messages }
+    end
+  end
+
   private
 
   def course_with_lessons
