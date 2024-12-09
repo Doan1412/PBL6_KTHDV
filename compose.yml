@@ -1,0 +1,55 @@
+services:
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: pbl6
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - ~/mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  phpmyadmin:
+    image: phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: password
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+  client:
+    image: doanhuyen/pbl6-frontend:latest
+    depends_on:
+      - server
+    environment:
+      NODE_ENV: development
+    ports:
+      - "3000:3000"
+
+  server:
+    image: doanhuyen/pbl6-backend:latest
+    environment:
+      DATABASE_HOST: db
+      DATABASE_USER: user
+      DATABASE_PASSWORD: password
+      DATABASE_NAME: pbl6
+      DISABLE_DATABASE_ENVIRONMENT_CHECK: 1
+    volumes:
+      - ./server:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3001:3001"
+
+volumes:
+  mysql_data:

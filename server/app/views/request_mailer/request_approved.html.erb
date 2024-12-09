@@ -1,0 +1,11 @@
+<h1>Request Approved</h1>
+<p>Your request for the course "<%= @request_course.title %>" has been approved.</p>
+<p>A new course has been created successfully.</p>
+<p>Course Details:</p>
+<ul>
+  <li><strong>Title:</strong> <%= @request_course.title %></li>
+  <li><strong>Level:</strong> <%= @request_course.level %></li>
+  <li><strong>Category:</strong> <%= @request_course.category.name if @request_course.category %></li>
+  <li><strong>Created At:</strong> <%= @request_course.created_at.strftime("%B %d, %Y") %></li>
+</ul>
+<p>If you have any questions, please contact us.</p>

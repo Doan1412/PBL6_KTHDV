@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Japanese Language Basics",
+    "description": "Courses covering the foundational aspects of the Japanese language, including hiragana, katakana, and basic grammar."
+  },
+  {
+    "id": 2,
+    "name": "Intermediate Japanese",
+    "description": "Courses aimed at enhancing conversational skills, kanji comprehension, and complex grammar."
+  },
+  {
+    "id": 3,
+    "name": "Advanced Japanese",
+    "description": "Courses designed for advanced learners focusing on fluency, professional language use, and advanced kanji."
+  },
+  {
+    "id": 4,
+    "name": "Japanese Culture",
+    "description": "Courses exploring the rich cultural heritage of Japan, including history, traditions, and modern influences."
+  },
+  {
+    "id": 5,
+    "name": "JLPT Preparation",
+    "description": "Courses specifically designed to help learners prepare for the Japanese Language Proficiency Test at various levels."
+  },
+  {
+    "id": 6,
+    "name": "Japanese for Travel",
+    "description": "Short courses focused on essential Japanese phrases and customs for travelers."
+  }
+]

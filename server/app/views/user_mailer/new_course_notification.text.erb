@@ -1,0 +1,17 @@
+New Course Notification
+
+Dear <%= @user.full_name %>,
+
+We are excited to inform you that a new course has been added by <%= @teacher.name %>.
+
+Course Title: <%= @course.title %>
+Course Description: <%= @course.description %>
+
+You can view the course and enroll by clicking the link below:
+<%= "#{Settings.course_url}/#{@course.id}" %>
+
+Thank you for being a valued follower!
+
+Best regards,
+RETURN
+&copy; RETURN

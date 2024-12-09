@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Course Notification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: #007BFF;
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .footer {
+            font-size: 0.9em;
+            color: #777777;
+            text-align: center;
+            margin-top: 20px;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>New Course Available!</h2>
+        </div>
+        <div class="content">
+            <p>Dear <%= @user.full_name %>,</p>
+            <p>We are excited to inform you that a new course has been added by <%= @teacher.name %>.</p>
+            <p><strong>Course Title:</strong> <%= @course.title %></p>
+            <p><strong>Course Description:</strong> <%= @course.description %></p>
+            <p>You can view the course and enroll by clicking the link below:</p>
+            <p><a href="<%= "#{Settings.course_url}/#{@course.id}" %>">View Course</a></p>
+            <p>Thank you for being a valued follower!</p>
+        </div>
+        <div class="footer">
+            <p>&copy; RETURN</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,232 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 180 0% 100%;
+    --foreground: 180 0% 10%;
+    --card: 180 0% 100%;
+    --card-foreground: 180 0% 15%;
+    --popover: 180 0% 100%;
+    --popover-foreground: 180 95% 10%;
+    --primary: 180 74.7% 46.5%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 180 10% 90%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 142 10% 95%;
+    --muted-foreground: 180 0% 40%;
+    --accent: 142 10% 90%;
+    --accent-foreground: 180 0% 15%;
+    --destructive: 0 50% 50%;
+    --success: 150, 52%, 51%;
+    --destructive-foreground: 180 0% 100%;
+    --border: 180 20% 82%;
+    --input: 180 20% 50%;
+    --ring: 180 74.7% 46.5%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 180 10% 10%;
+    --foreground: 180 0% 100%;
+    --card: 180 0% 10%;
+    --card-foreground: 180 0% 100%;
+    --popover: 180 10% 5%;
+    --popover-foreground: 180 0% 100%;
+    --primary: 180 74.7% 46.5%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 180 10% 20%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 142 10% 25%;
+    --muted-foreground: 180 0% 65%;
+    --accent: 142 10% 25%;
+    --accent-foreground: 180 0% 95%;
+    --destructive: 0 50% 50%;
+    --success: 150, 52%, 51%;
+    --destructive-foreground: 180 0% 100%;
+    --border: 180 20% 50%;
+    --input: 180 20% 50%;
+    --ring: 180 74.7% 46.5%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+@layer components {
+  .primary-btn {
+    @apply inline-block bg-blue-500 text-white font-bold py-2 px-4 rounded;
+  }
+}
+
+@layer utilities {
+  .drop-shadow {
+    filter: drop-shadow(6px 8px 10px rgba(0, 0, 0, 0.5));
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.react-calendar {
+  width: 100% !important;
+  border: none !important;
+  font-family: "Inter", sans-serif !important;
+}
+
+.react-calendar__navigation__label__labelText {
+  font-weight: 600;
+}
+
+.react-calendar__tile--active {
+  background-color: #c3ebfa !important;
+  color: black !important;
+}
+
+.rbc-btn-group:first-child {
+  display: none !important;
+}
+
+.rbc-toolbar-label {
+  text-align: right !important;
+  padding: 0px 20px !important;
+}
+
+.rbc-btn-group:last-child {
+  font-size: 13px !important;
+}
+
+.rbc-btn-group:last-child button {
+  border: none !important;
+  background-color: #f1f0ff !important;
+  margin-left: 2px !important;
+}
+
+.rbc-toolbar button.rbc-active {
+  background-color: #dbdafe !important;
+  box-shadow: none !important;
+}
+
+.rbc-time-view {
+  border-color: #eee !important;
+}
+
+.rbc-time-header {
+  display: none !important;
+}
+
+.rbc-time-content {
+  border: none !important;
+}
+
+.rbc-time-gutter.rbc-time-column {
+  font-size: 12px !important;
+}
+
+.rbc-time-gutter.rbc-time-column .rbc-timeslot-group {
+  padding: 0px 20px !important;
+}
+
+.rbc-timeslot-group {
+  background-color: #f7fdff !important;
+}
+
+.rbc-day-slot {
+  font-size: 14px !important;
+}
+
+.rbc-event {
+  border: none !important;
+  color: black !important;
+  padding: 10px !important;
+  margin: 10px !important;
+  width: 99% !important;
+}
+
+.rbc-event:nth-child(1) {
+  background-color: #e2f8ff !important;
+}
+.rbc-event:nth-child(2) {
+  background-color: #fefce8 !important;
+}
+.rbc-event:nth-child(3) {
+  background-color: #f2f1ff !important;
+}
+.rbc-event:nth-child(4) {
+  background-color: #fdf2fb !important;
+}
+.rbc-event:nth-child(5) {
+  background-color: #e2f8ff !important;
+}
+.rbc-event:nth-child(6) {
+  background-color: #fefce8 !important;
+}
+.rbc-event:nth-child(7) {
+  background-color: #f2f1ff !important;
+}
+.rbc-event:nth-child(8) {
+  background-color: #fdf2fb !important;
+}
+
+.rbc-event-label{
+  color: gray !important;
+  margin-bottom: 5px;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-x-180 {
+  transform: rotateX(180deg);
+}
+
+.slide-next {
+  animation: slideInFromRight 0.5s forwards;
+}
+
+.slide-previous {
+  animation: slideInFromLeft 0.5s forwards;
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

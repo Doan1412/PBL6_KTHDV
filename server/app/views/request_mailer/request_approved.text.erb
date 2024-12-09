@@ -1,0 +1,12 @@
+Request Approved
+
+Your request for the course "<%= @request_course.title %>" has been approved.
+A new course has been created successfully.
+
+Course Details:
+- Title: <%= @request_course.title %>
+- Level: <%= @request_course.level %>
+- Category: <%= @request_course.category.name if @request_course.category %>
+- Created At: <%= @request_course.created_at.strftime("%B %d, %Y") %>
+
+If you have any questions, please contact us.

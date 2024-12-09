@@ -1,0 +1,12 @@
+VALID_EMAIL_REGEX: '\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z'
+ALGORITHM: "HS256"
+email_max_length: 255
+min_password_length: 6
+success_code: 200
+maximum_name_length: 255
+constant_2: 2
+reset_password_url: "http://localhost:3000/account_reset_password_success?token="
+account_confirmation_url: "http://localhost:3000/account_confirmation_success?token="
+course_url: "http://localhost:3000/user/course"
+in_progress: in_progress
+completed: completed
