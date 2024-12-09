@@ -1,4 +1,3 @@
-# app/services/progress_service.rb
 class ProgressService
   def initialize(user)
     @user = user

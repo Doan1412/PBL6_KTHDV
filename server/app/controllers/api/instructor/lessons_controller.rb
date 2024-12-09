@@ -6,12 +6,14 @@ module Api::Instructor
     before_action :permit?, only: :create
 
     def index
-      @q = @course.lessons.ransack(params[:q])
-      @pagy, @lessons = pagy(@q.result.includes(:course))
+      lessons = LessonService.fetch_lessons(@course.id)
+      formatted_lessons = LessonService.format_lessons(lessons)
+      @pagy, paged_lessons = pagy(lessons)
+      formatted_paged_lessons = LessonService.format_lessons(paged_lessons)
 
       json_response(
         message: {
-          lessons: formatted_lessons,
+          lessons: formatted_paged_lessons,
           pagy: pagy_res(@pagy)
         },
         status: :ok
@@ -19,13 +21,13 @@ module Api::Instructor
     end
 
     def create
-      lesson = build_lesson
-      if lesson.save
-        handle_kanjis(lesson)
-        json_response(message: lesson, status: :ok)
+      lesson_service = LessonService.new(@course, lesson_params, nil, params[:kanji])
+      result = lesson_service.create_lesson
+
+      if result[:success]
+        json_response(message: result[:lesson], status: :ok)
       else
-        error_response(message: lesson.errors.full_messages,
-                       status: :unprocessable_entity)
+        error_response(message: result[:errors], status: :unprocessable_entity)
       end
     end
 
@@ -43,29 +45,28 @@ module Api::Instructor
     end
 
     def update
-      unless @lesson.update lesson_params
-        return error_response(message: @lesson.errors.full_messages,
-                              status: :unprocessable_entity)
-      end
+      lesson_service = LessonService.new(@course, lesson_params, @lesson, params[:kanji])
+      result = lesson_service.update_lesson
 
-      handle_kanjis_update(@lesson)
-      json_response(message: @lesson, status: :ok)
+      if result[:success]
+        json_response(message: result[:lesson], status: :ok)
+      else
+        error_response(message: result[:errors], status: :unprocessable_entity)
+      end
     end
 
     def destroy
-      unless @lesson
-        return error_response(message: "Lesson not found",
-                              status: :not_found)
-      end
+      lesson_service = LessonService.new(nil, nil, @lesson)
+      result = lesson_service.destroy_lesson
 
-      if @lesson.destroy
+      if result[:success]
         json_response(
-          message: {id: @lesson.id, status: "deleted"},
+          message: {id: result[:id], status: "deleted"},
           status: :ok
         )
       else
         error_response(
-          message: "Failed to delete the lesson",
+          message: result[:errors],
           status: :unprocessable_entity
         )
       end
@@ -85,7 +86,7 @@ module Api::Instructor
       params.require(:lesson).permit(Lesson::VALID_ATTRIBUTES_LESSON)
     end
 
-    def lesson_details lesson
+    def lesson_details(lesson)
       {
         id: lesson.id,
         title: lesson.title,
@@ -96,11 +97,11 @@ module Api::Instructor
         updated_at: lesson.updated_at,
         progress_counts: lesson.progress_counts,
         kanjis: kanji_characters(lesson),
-        course_title: @lesson&.course&.title
+        course_title: lesson.course&.title
       }
     end
 
-    def kanji_characters lesson
+    def kanji_characters(lesson)
       lesson.kanjis.pluck(:character)
     end
 
@@ -117,19 +118,6 @@ module Api::Instructor
           progress_counts: lesson.progress_counts
         }
       end
-    end
-
-    def create_kanjis_for_lesson lesson, kanji_array
-      kanji_array.each do |kanji_character|
-        lesson.kanjis.create(character: kanji_character, image_url: nil)
-      end
-    end
-
-    def handle_kanjis_update lesson
-      lesson.kanjis.destroy_all
-      return if params[:kanji].blank?
-
-      create_kanjis_for_lesson(lesson, params[:kanji])
     end
 
     def authorized_teacher?
@@ -150,16 +138,6 @@ module Api::Instructor
                        status: :forbidden)
         false
       end
-    end
-
-    def build_lesson
-      @course.lessons.new lesson_params
-    end
-
-    def handle_kanjis lesson
-      return if params[:kanji].blank?
-
-      create_kanjis_for_lesson(lesson, params[:kanji])
     end
   end
 end

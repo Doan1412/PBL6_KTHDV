@@ -1,4 +1,3 @@
-# app/services/course_assignment_service.rb
 class CourseAssignmentService
   def self.check_assignment(user, course)
     return :not_found unless course

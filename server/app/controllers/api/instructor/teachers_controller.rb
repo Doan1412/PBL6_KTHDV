@@ -1,33 +1,25 @@
 module Api::Instructor
   class TeachersController < ApplicationController
     def profile
-      teacher_profile = current_teacher.as_json(
-        include: {
-          account: {
-            only: [:email]
-          }
-        }
-      )
-      json_response(message: {profile: teacher_profile}, status: :ok)
+      teacher_service = TeacherService.new(current_teacher, current_user)
+      teacher_profile = teacher_service.teacher_profile
+
+      json_response(message: { profile: teacher_profile }, status: :ok)
     end
 
     def update
-      if current_teacher.update teacher_params
-        json_response(
-          message: {
-            teacher: current_teacher.as_json(
-              include: {
-                account: {
-                  only: [:email]
-                }
-              }
-            )
-          },
-          status: :ok
+      teacher_service = TeacherService.new(current_teacher, current_user)
+
+      if teacher_service.update_teacher_profile(teacher_params)
+        updated_teacher = current_teacher.as_json(
+          include: {
+            account: { only: [:email] }
+          }
         )
+
+        json_response(message: { teacher: updated_teacher }, status: :ok)
       else
-        error_response(message: "Update profile failed",
-                       status: :unprocessable_entity)
+        error_response(message: "Update profile failed", status: :unprocessable_entity)
       end
     end
 

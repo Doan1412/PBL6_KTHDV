@@ -1,14 +1,13 @@
 module Api::Instructor
   class RequestCoursesController < ApplicationController
     def create
-      request_course = RequestCourse.new request_course_params
-      request_course.teacher_id = current_teacher.id
-      request_course.status = :pending
+      request_course_service = RequestCourseService.new(current_teacher, request_course_params)
+      result = request_course_service.create_request_course
 
-      if request_course.save
-        json_response(message: request_course, status: :created)
+      if result[:success]
+        json_response(message: result[:request_course], status: :created)
       else
-        error_response(message: request_course.errors.full_messages)
+        error_response(message: result[:errors], status: :unprocessable_entity)
       end
     end
 
