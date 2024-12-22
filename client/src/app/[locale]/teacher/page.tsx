@@ -1,5 +1,4 @@
 'use client'
-import Sidebar from '@/src/components/Sidebar'
 import { useEffect, useState } from 'react'
 import { getCookie } from 'cookies-next'
 import { useRouter } from 'next/navigation'
