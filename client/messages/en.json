@@ -82,7 +82,10 @@
     "pending": "Pending...",
     "accepted": "Accepted",
     "please_login": "Please login to enroll this course",
-    "enrolled": "Go to"
+    "enrolled": "Go to",
+    "review_star": "(Click rate this course)",
+    "rating_success": "Rating success!!!",
+    "average_rating": " out of 5"
   },
   "nodata": {
     "no_data_title": "No result found",
@@ -160,7 +163,8 @@
   },
   "course_card": {
     "detail": "View Details",
-    "category": "Category"
+    "category": "Category",
+    "average_rating": " out of 5"
   },
   "mycourse": {
     "title": "My Courses",

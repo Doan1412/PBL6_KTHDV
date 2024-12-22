@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_25_133035) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_09_035519) do
   create_table "accounts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", null: false
     t.string "password_digest", null: false
@@ -52,6 +52,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_25_133035) do
     t.datetime "updated_at", null: false
     t.index ["course_id"], name: "index_course_assignments_on_course_id"
     t.index ["user_id"], name: "index_course_assignments_on_user_id"
+  end
+
+  create_table "course_ratings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "course_id", null: false
+    t.integer "rating"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_course_ratings_on_course_id"
+    t.index ["user_id", "course_id"], name: "index_course_ratings_on_user_id_and_course_id", unique: true
+    t.index ["user_id"], name: "index_course_ratings_on_user_id"
   end
 
   create_table "courses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -157,6 +168,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_25_133035) do
   add_foreign_key "course_assignments", "courses"
   add_foreign_key "course_assignments", "users"
   add_foreign_key "courses", "categories"
+  add_foreign_key "course_ratings", "courses"
+  add_foreign_key "course_ratings", "users"
   add_foreign_key "courses", "teachers"
   add_foreign_key "flashcards", "lessons"
   add_foreign_key "follows", "teachers"
