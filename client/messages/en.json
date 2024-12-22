@@ -653,5 +653,28 @@
     "recommendation": "Suggested correction",
     "loading_text": "Checking grammar...",
     "check_grammar": "Check grammar"
+  },
+  "admin_dashboard": {
+    "general_analysis": "General Analysis",
+    "title": "Admin Dashboard",
+    "total_assigned_courses": "Total Assigned Courses",
+    "total_teachers": "Total Teachers",
+    "total_users": "Total Users",
+    "total_courses": "Total Courses",
+    "no_token_message": "No token found. Please log in again.",
+    "error": "An error occurred while fetching data.",
+    "teachers_number": "Number of Teachers",
+    "unknown": "Unknown",
+    "course_enroll_request": "Course Enrollment Requests",
+    "approved": "Approved",
+    "pending": "Pending",
+    "rejected": "Rejected",
+    "course_requests": "Course Requests",
+    "course_title": "Course Title",
+    "status": "Status",
+    "create_at": "Created At",
+    "previous": "Previous",
+    "next": "Next",
+    "loading": "Loading..."
   }
 }

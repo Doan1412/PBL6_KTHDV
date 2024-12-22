@@ -46,6 +46,7 @@ Rails.application.routes.draw do
       resources :users, only: %i(index)
       resources :teachers, only: %i(index destroy)
       resources :courses, only: %i(index destroy)
+      get "dashboard_stats", to: "courses#dashboard_stats"
       resources :accounts do
         patch :update_status, on: :member
       end

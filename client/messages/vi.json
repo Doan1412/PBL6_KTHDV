@@ -639,15 +639,38 @@
     "examples": "Ví dụ",
     "playAudio": "Phát âm thanh"
   },
-    "grammar": {
-      "title": "Kiểm tra ngữ pháp",
-      "input": "Nhập văn bản để kiểm tra ngữ pháp...",
-      "check_grammar_failed": "Kiểm tra ngữ pháp thất bại. Vui lòng thử lại.",
-      "grammar_correct": "Ngữ pháp chính xác.",
-      "grammar_incorrect": "Ngữ pháp không chính xác.",
-      "error_occurred": "Đã xảy ra lỗi khi kiểm tra ngữ pháp.",
-      "recommendation": "Gợi ý chỉnh sửa",
-      "loading_text": "Đang kiểm tra ngữ pháp...",
-      "check_grammar": "Kiểm tra ngữ pháp"
-    }
+  "grammar": {
+    "title": "Kiểm tra ngữ pháp",
+    "input": "Nhập văn bản để kiểm tra ngữ pháp...",
+    "check_grammar_failed": "Kiểm tra ngữ pháp thất bại. Vui lòng thử lại.",
+    "grammar_correct": "Ngữ pháp chính xác.",
+    "grammar_incorrect": "Ngữ pháp không chính xác.",
+    "error_occurred": "Đã xảy ra lỗi khi kiểm tra ngữ pháp.",
+    "recommendation": "Gợi ý chỉnh sửa",
+    "loading_text": "Đang kiểm tra ngữ pháp...",
+    "check_grammar": "Kiểm tra ngữ pháp"
+  },
+  "admin_dashboard": {
+    "general_analysis": "Phân tích chung",
+    "title": "Bảng điều khiển Quản trị",
+    "total_assigned_courses": "Tổng số khóa học đã phân công",
+    "total_teachers": "Tổng số giảng viên",
+    "total_users": "Tổng số người dùng",
+    "total_courses": "Tổng số khóa học",
+    "no_token_message": "Không tìm thấy token. Vui lòng đăng nhập lại.",
+    "error": "Đã xảy ra lỗi khi lấy dữ liệu.",
+    "teachers_number": "Số lượng giáo viên",
+    "unknown": "Không xác định",
+    "course_enroll_request": "Yêu cầu đăng ký khóa học",
+    "approved": "Đã duyệt",
+    "pending": "Chờ duyệt",
+    "rejected": "Bị từ chối",
+    "course_requests": "Yêu cầu khóa học",
+    "course_title": "Tiêu đề khóa học",
+    "status": "Trạng thái",
+    "create_at": "Ngày tạo",
+    "previous": "Trước",
+    "next": "Tiếp theo",
+    "loading": "Đang tải..."
+  }
 }

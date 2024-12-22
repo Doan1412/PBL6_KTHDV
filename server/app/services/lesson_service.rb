@@ -11,7 +11,6 @@ class LessonService
           .includes(:kanjis, :flashcards, course: :teacher, progresses: {})
   end
 
-  # Format lessons for response
   def self.format_lessons(lessons)
     lessons.as_json(
       include: {
@@ -28,7 +27,6 @@ class LessonService
     end
   end
 
-  # Create a new lesson
   def create_lesson
     lesson = @course.lessons.new(@lesson_params)
     if lesson.save
