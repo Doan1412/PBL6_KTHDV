@@ -21,12 +21,10 @@ module Api::Admin
       status = params[:status]
 
       ActiveRecord::Base.transaction do
-        # Gọi service để cập nhật trạng thái yêu cầu
         unless RequestCourseService.new(@request_course.teacher, nil).update_request_status(@request_course, status)
           raise ActiveRecord::Rollback, "Failed to update the request"
         end
 
-        # Xử lý các trạng thái được phê duyệt hoặc bị từ chối
         if status == "approved"
           result = RequestCourseService.new(@request_course.teacher, nil).handle_approved_status(@request_course)
           json_response(message: result[:message])
