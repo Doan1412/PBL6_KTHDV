@@ -6,6 +6,7 @@ class Course < ApplicationRecord
   has_many :progresses, through: :lessons
   has_many :course_assignments, dependent: :destroy
   has_many :users, through: :course_assignments
+  has_many :course_ratings, dependent: :destroy
 
   VALID_ATTRIBUTES_COURSE = %i(title level description category_id
                               image_url).freeze
@@ -47,6 +48,10 @@ class Course < ApplicationRecord
     def ransackable_associations _auth_object = nil
       %w(category teacher lessons course_assignments)
     end
+  end
+
+  def average_rating
+    course_ratings.average(:rating).to_f.round(2)
   end
 
   private

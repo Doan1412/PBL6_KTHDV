@@ -7,6 +7,7 @@ class User < ApplicationRecord
   has_many :teachers, through: :follows
   has_many :progresses, dependent: :destroy
   has_many :lessons, through: :progresses
+  has_many :course_ratings, dependent: :destroy
 
   enum sex: {male: 0, female: 1, other: 2}
 

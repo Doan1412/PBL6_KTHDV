@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
     resources :courses, only: %i(show index) do
       resources :lessons, only: :index
+      resources :ratings, only: :create, controller: "course_ratings"
       post "assign", on: :member
       collection do
         get "search"

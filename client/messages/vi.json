@@ -78,7 +78,10 @@
     "pending": "Đang chờ xử lý...",
     "accepted": "Đã đăng ký",
     "please_login": "Vui lòng đăng nhập để đăng ký khóa học này",
-    "enrolled": "Vào học ngay"
+    "enrolled": "Vào học ngay",
+    "review_star": "(Click để đánh giá khóa học này)",
+    "rating_success": "Đánh giá thành công!!!",
+    "average_rating": " trong số 5"
   },
   "nodata": {
     "no_data_title": "Không tìm thấy kết quả",
@@ -156,7 +159,8 @@
   },
   "course_card": {
     "detail": "Xem chi tiết",
-    "category": "Danh mục"
+    "category": "Danh mục",
+    "average_rating": " trong số 5"
   },
   "mycourse": {
     "title": "Khóa học của tôi",
