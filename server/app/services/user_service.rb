@@ -17,9 +17,11 @@ class UserService
 
   def fetch_enrolled_courses
     @user.courses
-         .preload(:teacher, :category)
-         .as_json(include: %i(teacher category),
-                  methods: :average_rating)
+        .joins(:course_assignments)
+        .where(course_assignments: { status: CourseAssignment.statuses[:accepted] })
+        .preload(:teacher, :category)
+        .as_json(include: %i[teacher category],
+                methods: :average_rating)
   end
 
   def self.fetch_users(query_params)
