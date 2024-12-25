@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { Course } from '@/src/app/types/course.type'
 import Img_default from '@/src/app/assets/default_course_img.png'
+import Link from 'next/link'
 interface CourseCardProps {
   course: Course
   teacher?: string
