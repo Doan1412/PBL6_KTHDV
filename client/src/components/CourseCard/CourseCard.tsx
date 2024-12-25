@@ -34,7 +34,9 @@ const CourseCard = ({ course, teacher }: CourseCardProps) => {
         <div className='w-full'>
           <Tooltip>
             <TooltipTrigger className='w-full text-left'>
-              <CardTitle className='text-lg uppercase font-bold truncate'>{course?.title}</CardTitle>
+              <Link href={`/user/courses/${course.id}`}>
+                <CardTitle className='text-lg uppercase font-bold truncate'>{course?.title}</CardTitle>
+              </Link>
             </TooltipTrigger>
             <TooltipContent side='top'>
               <p>{course?.title}</p>
