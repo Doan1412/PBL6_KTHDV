@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { Course } from '@/src/app/types/course.type'
 import Img_default from '@/src/app/assets/default_course_img.png'
+import Link from 'next/link'
 interface CourseCardProps {
   course: Course
   teacher?: string
@@ -34,7 +35,9 @@ const CourseCard = ({ course, teacher }: CourseCardProps) => {
         <div className='w-full'>
           <Tooltip>
             <TooltipTrigger className='w-full text-left'>
-              <CardTitle className='text-lg uppercase font-bold truncate'>{course?.title}</CardTitle>
+              <Link href={`/user/courses/${course.id}`}>
+                <CardTitle className='text-lg uppercase font-bold truncate'>{course?.title}</CardTitle>
+              </Link>
             </TooltipTrigger>
             <TooltipContent side='top'>
               <p>{course?.title}</p>

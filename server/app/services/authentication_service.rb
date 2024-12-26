@@ -9,26 +9,34 @@ class AuthenticationService
 
   def login
     account = Account.find_by(email: @params[:email])
+    
+    if account&.authenticate(@params[:password])
+      return error(message: "Account not activated", status: :unauthorized) unless account.activated
+      return error(message: "Account is banned", status: :forbidden) if account.ban?
 
-    return error_response("Invalid email or password") unless account&.authenticate(@params[:password])
-
-    return error_response("Account not activated") unless account.activated
-
-    jwt = Auth.issue(payload: {account: account.id})
-    success_response(jwt:, roles: account.roles)
+      jwt = issue_jwt(account)
+      success(jwt:, roles: account.roles)
+    else
+      error(message: "Invalid email or password", status: :unauthorized)
+    end
   end
 
   def login_oauth_google
     response = fetch_google_token_info(@params[:id_token])
+    
+    if response.code == Settings.success_code
+      account = find_or_create_account(response.parsed_response)
 
-    return error_response("Invalid token") unless response.code == Settings.success_code
+      return error(message: "Account is banned", status: :forbidden) if account.ban?
 
-    account = find_or_create_account(response.parsed_response)
-    if account.persisted?
-      jwt = issue_jwt(account)
-      success_response(jwt:, roles: account.roles)
+      if account.persisted?
+        jwt = issue_jwt(account)
+        success(jwt:, roles: account.roles)
+      else
+        error(message: account.errors.full_messages, status: :unprocessable_entity)
+      end
     else
-      error_response(account.errors.full_messages.join(", "))
+      error(message: "Invalid token", status: :unauthorized)
     end
   end
 
@@ -62,14 +70,14 @@ class AuthenticationService
   end
 
   def issue_jwt(account)
-    Auth.issue(payload: {account: account.id})
+    Auth.issue(payload: { account: account.id })
   end
 
-  def success_response(jwt:, roles:)
+  def success(jwt:, roles:)
     { success: true, jwt:, roles: }
   end
 
-  def error_response(message)
-    { success: false, message: }
+  def error(message:, status:)
+    { success: false, message:, status: }
   end
 end

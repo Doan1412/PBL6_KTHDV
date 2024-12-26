@@ -16,8 +16,7 @@ module Api::Instructor
     end
 
     def update_status
-      result = CourseAssignmentService.update_status(@course_assignment, params[:status]
-      )
+      result = CourseAssignmentService.update_status(@course_assignment, params[:status])
 
       if result[:success]
         json_response(message: result[:message])
