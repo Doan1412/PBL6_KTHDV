@@ -13,7 +13,7 @@ class Api::AccountsController < Api::ApplicationController
         status: :ok
       )
     else
-      error_response(message: result[:errors].join(", "), status: :unprocessable_entity)
+      error_response(message: result[:message] || result[:errors]&.join(", "), status: :unprocessable_entity)
     end
   end
 

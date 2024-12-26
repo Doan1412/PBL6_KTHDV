@@ -89,7 +89,7 @@ export default function KanjiList({ kanjis = [] }: KanjiListProps) {
 
   if (!kanjis || kanjis.length === 0) {
     return (
-      <div className='absolute top-1/2 left-1/3 transform -translate-x-1/2 -translate-y-1/3'>
+      <div className='flex flex-col items-center gap-4 w-full h-44 justify-center'>
         <p className='font-semibold text-2xl'>{t('noKanji')}</p>
       </div>
     )
